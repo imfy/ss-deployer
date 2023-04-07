@@ -1,0 +1,19 @@
+{
+  "routing": {
+    "rules": [
+      {
+        "type": "field",
+        "outboundTag": "ipv6",
+        "domain": [
+          "geosite:google",
+          "geosite:netflix"
+        ]
+      },
+      {
+        "inboundTag": ["api"],
+        "outboundTag": "api",
+        "type": "field"
+      }
+    ]
+  }
+}

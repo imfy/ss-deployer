@@ -1,0 +1,14 @@
+{
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    },
+    {
+      "tag": "ipv6",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv6"
+      }
+    }
+  ]
+}
