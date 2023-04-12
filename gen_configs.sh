@@ -12,7 +12,8 @@ routing_file=~/v2ray/confs/routing.json
 
 # get comma
 get_comma() {
-  if [[ $1 -lt $(($2-1)) ]]; then
+#  if [[ $1 -lt $(($2-1)) ]]; then
+  if [[ $1 -lt $2 ]]; then
     echo ","
   fi
 }
@@ -84,7 +85,6 @@ for_ports() {
   i=1
   count=$(grep -c "" $SS_PORTS_FILE)
   cat $SS_PORTS_FILE | while read line; do
-    if [[ $i -eq $count ]]; then break; fi
     conf=(${line})
     port=${conf[0]}
     password=${conf[1]}
