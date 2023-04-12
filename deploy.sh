@@ -1,40 +1,53 @@
-# 获取信息
-read -p "本地ip（不输入则为127.0.0.1）：" ip
-if [[ $ip == "" ]]; then
-  ip=127.0.0.1
+#! /bin/bash
+
+SD_HOME=/usr/ss-deployer
+IP_FILE=$SD_HOME/ip
+MMP_PORTS_FILE=$SD_HOME/mmp_ports
+
+# 创建配置目录
+if [[ ! -d $SD_HOME ]]; then mkdir $SD_HOME; fi
+
+# 选择模式
+read -p "新装或更新配置？（新装1；更新配置2。不输入默认2）：" mode
+if [[ $mode == "" ]]; then mode=2; fi
+if [[ $mode == 1 ]]; then
+  apt install -y git
+  git clone https://github.com/imfy/ss-deployer.git
+  rm -rf ss-deployer/.git
+  rm -rf ss-deployer/deploy.sh
+  rm -rf ss-deployer/README.md
+  if [[ -d mmp-go ]]; then rm -rf mmp-go; fi
+  if [[ -d v2ray ]]; then rm -rf v2ray; fi
+  if [[ -d naive ]]; then rm -rf naive; fi
+  mv -f ss-deployer/* .
+  rm -rf ss-deployer
+  mkdir v2ray/log
 fi
-read -p "聚合端口编号：" n
-read -p "当前设备类型（前端1，落地2）：" type
 
-# 修改mmp-go配置
-port1=4${n}998
-port2=4${n}999
-sed -i "s/127.0.0.1/$ip/g" mmp-go/conf.json
-sed -i "s/port1/$port1/g" mmp-go/conf.json
-sed -i "s/port2/$port2/g" mmp-go/conf.json
+chmod +x *.sh
 
-# 修改naive配置
+# 配置ip
+read -p "本地ip（不输入则为127.0.0.1）：" ip
+if [[ $ip == "" ]]; then ip=127.0.0.1; fi
+echo $ip > $IP_FILE
+
+# 配置mmp端口
+read -p "聚合端口编号（不输入则为1，即41998和41999）：" n
+if [[ $n == "" ]]; then n=1; fi
+echo "4${n}998 4${n}999" > $MMP_PORTS_FILE
+
+# 配置ss端口
+if [[ -f ss_ports ]]; then mv -f ss_ports $SD_HOME/ss_ports; fi
+
+# 配置设备类型
+read -p "当前设备类型（前置1；落地2。不输入默认2）：" type
+if [[ $type == "" ]]; then type=2; fi
+
+# 生成配置文件
 if [[ $type == 1 ]]; then
-  echo "前端设备"
+  echo "前置设备"
 else
   rm -rf naive
+  rm -rf nserver.sh
+  ./gen_configs.sh l
 fi
-
-# 修改v2ray配置
-rm -rf v2ray
-if [[ $type == 1 ]]; then
-  mv v2ray-front/* .
-else
-  mv v2ray-land/* .
-fi
-rm -rf v2ray-*
-sed -i "s/127.0.0.1/$ip/g" v2ray/confs/inbounds.json
-
-
-# 启动各项服务
-chmod +x mmp-go/mmp-go
-chmod +x naive/naive
-chmod +x v2ray/v2ray
-chmod +x *.sh
-./mserver.sh
-./vserver.sh

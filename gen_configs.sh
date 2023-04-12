@@ -1,8 +1,9 @@
 #! /bin/bash
 
-IP_FILE=/usr/ss-deployer/ip
-SS_PORTS_FILE=/usr/ss-deployer/ss_ports
-MMP_PORTS_FILE=/usr/ss-deployer/mmp_ports
+SD_HOME=/usr/ss-deployer
+IP_FILE=$SD_HOME/ip
+SS_PORTS_FILE=$SD_HOME/ss_ports
+MMP_PORTS_FILE=$SD_HOME/mmp_ports
 
 mmp_config_file=~/mmp-go/conf.json
 inbounds_file=~/v2ray/confs/inbounds.json
@@ -80,9 +81,10 @@ wsm() {
 #}
 
 for_ports() {
-  i=0
+  i=1
   count=$(grep -c "" $SS_PORTS_FILE)
   cat $SS_PORTS_FILE | while read line; do
+    if [[ $i -eq $count ]]; then break; fi
     conf=(${line})
     port=${conf[0]}
     password=${conf[1]}
@@ -164,3 +166,13 @@ wi "}"
 #wr "    ]"
 #wr "  }"
 #wr "}"
+
+## 启动各项服务
+chmod +x mmp-go/mmp-go
+chmod +x v2ray/v2ray
+./mserver.sh
+./vserver.sh
+if [[ $1 == "f" ]]; then
+  chmod +x naive/naive
+  ./nserver;
+fi
