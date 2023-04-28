@@ -36,16 +36,17 @@ if [[ $mode == 1 ]]; then
   rm -rf ss-deployer/deploy.sh
   rm -rf ss-deployer/README.md
   if [[ -d mmp-go ]]; then rm -rf mmp-go; fi
-  if [[ -d v2ray ]]; then rm -rf v2ray; fi
+  if [[ -d xray ]]; then rm -rf xray; fi
   if [[ -d naive ]]; then rm -rf naive; fi
   mv -f ss-deployer/* .
   rm -rf ss-deployer
-  mkdir v2ray/log
+  mkdir xray/log
   read -p "是否安装warp以提供ipv6解锁能力（安装1；不安装2。不输入默认2）：" warp
   if [[ $warp == "" ]]; then warp=2; fi
   if [[ $warp == 1 ]]; then
     apt install -y curl
-    bash <(curl -sSL https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh)
+    wget -N https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
+    bash menu.sh
   fi
 fi
 

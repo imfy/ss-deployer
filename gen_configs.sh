@@ -6,9 +6,9 @@ SS_PORTS_FILE=$SD_HOME/ss_ports
 MMP_PORTS_FILE=$SD_HOME/mmp_ports
 
 mmp_config_file=~/mmp-go/conf.json
-inbounds_file=~/v2ray/confs/inbounds.json
-outbounds_file=~/v2ray/confs/outbounds.json
-routing_file=~/v2ray/confs/routing.json
+inbounds_file=~/xray/confs/inbounds.json
+outbounds_file=~/xray/confs/outbounds.json
+routing_file=~/xray/confs/routing.json
 
 # get comma
 get_comma() {
@@ -169,9 +169,9 @@ wi "}"
 
 ## 启动各项服务
 chmod +x mmp-go/mmp-go
-chmod +x v2ray/v2ray
+chmod +x xray/xray
 ./mserver.sh
-./vserver.sh
+./xserver.sh
 if [[ $1 == "f" ]]; then
   chmod +x naive/naive
   ./nserver;
