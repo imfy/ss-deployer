@@ -12,7 +12,7 @@ if [[ $1 == "1" ]]; then
   # 创建outbounds.json
   bash $SD_HOME/generators/gen_outbounds.sh
   # 创建routing.json
-  bash $SD_HOME/generators/gen_routing_conf.sh
+  bash $SD_HOME/generators/gen_routings.sh
 fi
 
 ## 启动各项服务
