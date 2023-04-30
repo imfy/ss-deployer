@@ -34,6 +34,7 @@ if [[ $type == "" ]]; then type=2; fi
 # 执行安装
 if [[ $mode == 1 ]]; then
   apt install -y git
+  rm -rf ss-deployer
   git clone https://github.com/imfy/ss-deployer.git
   rm -rf ss-deployer/.git
   rm -rf ss-deployer/deploy.sh
@@ -59,9 +60,10 @@ chmod +x *.sh
 
 # 生成配置文件
 if [[ $type == 1 ]]; then
+  if [[ ! -d $SD_HOME/generators ]]; then mkdir $SD_HOME/generators; fi
   mv -f generators/* $SD_HOME/generators
   rm -rf generators
-  ./gen_configs.sh 2
+  ./gen_configs.sh 1
 else
   rm -rf naive
   rm -rf nserver.sh
