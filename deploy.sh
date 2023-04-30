@@ -19,10 +19,13 @@ echo $ip > $IP_FILE
 # 配置mmp端口
 read -p "聚合端口编号（不输入则为1，即41998和41999）：" n
 if [[ $n == "" ]]; then n=1; fi
-echo "4${n}998 4${n}999" > $MMP_PORTS_FILE
+echo "mmp_ports=(4${n}998 4${n}999)" > $MMP_PORTS_FILE
 
 # 配置ss端口
-if [[ -f ss_ports ]]; then mv -f ss_ports $SD_HOME/ss_ports; fi
+if [[ -f user_confs ]]; then mv -f user_confs $SD_HOME/user_confs; fi
+
+# 配置线路
+if [[ -f dest_confs ]]; then mv -f dest_confs $SD_HOME/dest_confs; fi
 
 # 配置设备类型
 read -p "当前设备类型（前置1；落地2。不输入默认2）：" type
@@ -41,12 +44,14 @@ if [[ $mode == 1 ]]; then
   mv -f ss-deployer/* .
   rm -rf ss-deployer
   mkdir xray/log
-  read -p "是否安装warp以提供ipv6解锁能力（安装1；不安装2。不输入默认2）：" warp
-  if [[ $warp == "" ]]; then warp=2; fi
-  if [[ $warp == 1 ]]; then
-    apt install -y curl
-    wget -N https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
-    bash menu.sh
+  if [[ $type == 2 ]]; then
+    read -p "是否安装warp以提供ipv6解锁能力（安装1；不安装2。不输入默认2）：" warp
+    if [[ $warp == "" ]]; then warp=2; fi
+    if [[ $warp == 1 ]]; then
+      apt install -y curl
+      wget -N https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
+      bash menu.sh
+    fi
   fi
 fi
 
@@ -54,9 +59,11 @@ chmod +x *.sh
 
 # 生成配置文件
 if [[ $type == 1 ]]; then
-  echo "前置设备"
+  mv -f generators/* $SD_HOME/generators
+  rm -rf generators
+  ./gen_configs.sh 2
 else
   rm -rf naive
   rm -rf nserver.sh
-  ./gen_configs.sh l
+  ./gen_configs.sh 2
 fi

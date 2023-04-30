@@ -4,10 +4,15 @@
       "services": ["HandlerService", "LoggerService", "StatsService"]
     },
     "log": {
-      "access": "/root/v2ray/log/access.log",
-      "error": "/root/v2ray/log/error.log",
+      "access": "/root/xray/log/access.log",
+      "error": "/root/xray/log/error.log",
       "loglevel": "error",
       "dnsLog": false
+    },
+    "observatory": {
+      "subjectSelector": [
+        "obs"
+      ]
     },
     "policy": {
       "statsInboundUplink": true,
