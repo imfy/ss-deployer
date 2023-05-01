@@ -14,57 +14,56 @@ wr() {
 
 # write single balancer
 wsb() {
-  local i=1
   wr "      {"
-  wr "        \"tag\": \"b$1-tcp\","
+  wr "        \"tag\": \"balancer-tcp\","
   wr "        \"selector\": ["
-  for line in "${common_dest_list[@]}"; do
+  for line in "${ss_common_dest_list[@]}"; do
     local route=($line)
-    local comma=$(get_start_comma $i)
-    wr "          $comma\"obs-$1-${route[0]}\""
-    ((i++))
+    local comma=$(get_start_comma)
+    wr "          $comma\"obs-${route[0]}\""
+    is_first=0
   done
-  for line in "${tcp_dest_list[@]}"; do
+  for line in "${ss_tcp_dest_list[@]}"; do
     local route=($line)
-    local comma=$(get_start_comma $i)
-    wr "          $comma\"obs-$1-${route[0]}\""
-    ((i++))
+    local comma=$(get_start_comma)
+    wr "          $comma\"obs-${route[0]}\""
+    is_first=0
   done
   wr "        ],"
   wr "        \"strategy\": {\"type\": \"leastPing\"}"
   wr "      },"
-  i=1
+  is_first=1
   wr "      {"
-  wr "        \"tag\": \"b$1-udp\","
+  wr "        \"tag\": \"balancer-udp\","
   wr "        \"selector\": ["
-  for line in "${common_dest_list[@]}"; do
+  for line in "${ss_common_dest_list[@]}"; do
     local route=($line)
-    local comma=$(get_start_comma $i)
-    wr "          $comma\"obs-$1-${route[0]}\""
-    ((i++))
+    local comma=$(get_start_comma)
+    wr "          $comma\"obs-${route[0]}\""
+    is_first=0
   done
-  for line in "${udp_dest_list[@]}"; do
+  for line in "${ss_udp_dest_list[@]}"; do
     local route=($line)
-    local comma=$(get_start_comma $i)
-    wr "          $comma\"obs-$1-${route[0]}"
-    ((i++))
+    local comma=$(get_start_comma)
+    wr "          $comma\"obs-${route[0]}"
+    is_first=0
   done
   wr "        ],"
   wr "        \"strategy\": {\"type\": \"leastPing\"}"
-  wr "      }$4"
+  wr "      }"
 }
 
 # write single rule
 wsr() {
   wr "      {"
   wr "        \"inboundTag\": [\"$1\"],"
-  wr "        \"balancerTag\": \"b$1-tcp\","
+  wr "        \"balancerTag\": \"balancer-tcp\","
   wr "        \"network\": \"tcp\","
   wr "        \"type\": \"field\""
   wr "      },"
   wr "      {"
   wr "        \"inboundTag\": [\"$1\"],"
-  wr "        \"balancerTag\": \"b$1-udp\","
+  wr "        \"balancerTag\": \"balancer-udp\","
   wr "        \"network\": \"udp\","
   wr "        \"type\": \"field\""
   wr "      }$4"
@@ -74,7 +73,7 @@ rm -rf $routing_file
 wr "{"
 wr "  \"routing\": {"
 wr "    \"balancers\": ["
-          for_users wsb
+          wsb
 wr "    ],"
 wr "    \"rules\": ["
           for_users wsr

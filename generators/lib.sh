@@ -4,6 +4,8 @@ SD_HOME=/usr/ss-deployer
 
 . $SD_HOME/user_confs
 
+is_first=1
+
 get_end_comma() {
   if [[ $1 -lt $(($2-1)) ]]; then
     echo ","
@@ -11,7 +13,7 @@ get_end_comma() {
 }
 
 get_start_comma() {
-  if [[ $1 -ne 1 ]]; then
+  if [[ $is_first -eq 0 ]]; then
     echo ","
   fi
 }
@@ -36,7 +38,7 @@ for_users() {
       port=${user[0]}
       password=${user[1]}
       end_comma=$(get_end_comma $i $size)
-      $1 $port $password 8 $end_comma
+      $1 $port $password 9 $end_comma
       ((i++))
     done
 #  for((ui=0;ui<${#user_list[@]};ui++ )); do
