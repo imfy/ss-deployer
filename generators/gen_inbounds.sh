@@ -4,7 +4,7 @@ SD_HOME=/usr/ss-deployer
 
 . $SD_HOME/generators/lib.sh
 
-inbounds_file=~/xray/confs/inbounds.json
+inbounds_file=$SD_HOME/xray/confs/inbounds.json
 
 # write inbounds file
 wi() {

@@ -1,8 +1,14 @@
 #! /bin/bash
 
 SD_HOME=/usr/ss-deployer
+GENERATORS_DIR=$SD_HOME/generators
 IP_FILE=$SD_HOME/ip
+MMP_BIN=/usr/bin/mmp-go
+MMP_DIR=$SD_HOME/mmp-go
 MMP_PORTS_FILE=$SD_HOME/mmp_ports
+PR_BIN=/usr/bin/port-rules.sh
+XRAY_BIN=/usr/bin/xray
+XRAY_DIR=$SD_HOME/xray
 
 # 创建配置目录
 if [[ ! -d $SD_HOME ]]; then mkdir $SD_HOME; fi
@@ -33,18 +39,53 @@ if [[ $type == "" ]]; then type=2; fi
 
 # 执行安装
 if [[ $mode == 1 ]]; then
+  # 安装依赖
   apt install -y git
+
+  # clone项目
   rm -rf ss-deployer
   git clone https://github.com/imfy/ss-deployer.git
+
+  # 移除无用文件
   rm -rf ss-deployer/.git
   rm -rf ss-deployer/deploy.sh
   rm -rf ss-deployer/README.md
-  if [[ -d mmp-go ]]; then rm -rf mmp-go; fi
-  if [[ -d xray ]]; then rm -rf xray; fi
-  if [[ -d naive ]]; then rm -rf naive; fi
-  mv -f ss-deployer/* .
+
+  # 移动mmp-go
+  if [[ -f $MMP_BIN ]]; then rm -rf $MMP_BIN; fi
+  mv -f ss-deployer/mmp-go/mmp-go $MMP_BIN
+  chmod +x $MMP_BIN
+  if [[ -d $MMP_DIR ]]; then rm -rf $MMP_DIR; fi
+  mkdir $MMP_DIR
+
+  # 移动xray
+  if [[ -f $XRAY_BIN ]]; then rm -rf $XRAY_BIN; fi
+  mv -f ss-deployer/xray/xray $XRAY_BIN
+  chmod +x $XRAY_BIN
+  if [[ -d $XRAY_DIR ]]; then rm -rf $XRAY_DIR; fi
+  mkdir $XRAY_DIR
+  mkdir $XRAY_DIR/log
+  mv -f ss-deployer/xray/* $XRAY_DIR
+
+  # 移动generators
+  if [[ -d $GENERATORS_DIR ]]; then rm -rf $GENERATORS_DIR; fi
+  mkdir $GENERATORS_DIR
+  mv -f ss-deployer/generators/* $GENERATORS_DIR
+
+  # 移动port-rules
+  if [[ -f $PR_BIN ]]; then rm -rf $PR_BIN; fi
+  mv -f ss-deployer/port-rules.sh $PR_BIN
+  chmod +x $PR_BIN
+
+  # 移动system
+  mv -f ss-deployer/systemd/* /lib/systemd/system
+
+  # 剩余文件迁到root文件夹下
+  mv -f ss-deployer/gen_configs.sh /root/gen_configs.sh
+  mv -f ss-deployer/watch-traffics.sh /root/watch-traffics.sh
   rm -rf ss-deployer
-  mkdir xray/log
+
+  # 安装warp
   if [[ $type == 2 ]]; then
     read -p "是否安装warp以提供ipv6解锁能力（安装1；不安装2。不输入默认2）：" warp
     if [[ $warp == "" ]]; then warp=2; fi
@@ -60,12 +101,7 @@ chmod +x *.sh
 
 # 生成配置文件
 if [[ $type == 1 ]]; then
-  if [[ ! -d $SD_HOME/generators ]]; then mkdir $SD_HOME/generators; fi
-  mv -f generators/* $SD_HOME/generators
-  rm -rf generators
   ./gen_configs.sh 1
 else
-  rm -rf naive
-  rm -rf nserver.sh
   ./gen_configs.sh 2
 fi

@@ -1,0 +1,19 @@
+[Unit]
+Description=xray service
+After=network.target nss-lookup.target
+StartLimitIntervalSec=10
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+LimitNOFILE=102400
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+Environment="GODEBUG=madvdontneed=1"
+ExecStart=/usr/bin/xray run -confdir /usr/ss-deployer/xray/confs > /usr/ss-deployer/xray/log/start.log
+ExecReload=/bin/kill -USR1 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

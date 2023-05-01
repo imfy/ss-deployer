@@ -5,7 +5,7 @@ SD_HOME=/usr/ss-deployer
 . $SD_HOME/dest_confs
 . $SD_HOME/generators/lib.sh
 
-routing_file=~/xray/confs/routing.json
+routing_file=$SD_HOME/xray/confs/routing.json
 
 # write routing file
 wr() {

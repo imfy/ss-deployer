@@ -5,7 +5,7 @@ SD_HOME=/usr/ss-deployer
 . $SD_HOME/dest_confs
 . $SD_HOME/generators/lib.sh
 
-outbounds_file=~/xray/confs/outbounds.json
+outbounds_file=$SD_HOME/xray/confs/outbounds.json
 
 is_first=1
 

@@ -7,7 +7,9 @@ MMP_PORTS_FILE=$SD_HOME/mmp_ports
 . $SD_HOME/generators/lib.sh
 . $SD_HOME/mmp_ports
 
-mmp_config_file=~/mmp-go/conf.json
+mmp_config_file=$SD_HOME/mmp-go/conf.json
+
+group_num=0
 
 wm() {
   w $mmp_config_file "$1"
@@ -16,15 +18,21 @@ wm() {
 # write single mmp server
 wsms() {
   ip=$(cat $IP_FILE)
-  wm "        {"
-  wm "          \"target\": \"$ip:$1\","
-  wm "          \"method\": \"aes-128-gcm\","
-  wm "          \"password\": \"$2\""
-  wm "        }$4"
+  comma=$(get_start_comma)
+  if [[ $3 -eq $group_num ]]; then
+    wm "        $comma{"
+    wm "          \"target\": \"$ip:$1\","
+    wm "          \"method\": \"aes-128-gcm\","
+    wm "          \"password\": \"$2\""
+    wm "        }"
+    is_first=0
+  fi
 }
 
 # write single mmp group
 wsmg() {
+  ((group_num++))
+  is_first=1
   wm "    {"
   wm "      \"name\": \"$1\","
   wm "      \"port\": $1,"

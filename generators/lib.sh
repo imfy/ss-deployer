@@ -24,28 +24,10 @@ w() {
 }
 
 for_users() {
-  local user_list=("${user_list_1[@]}" "${user_list_2[@]}")
   local size=${#user_list[@]}
-  local i=0
-  for user in "${user_list_1[@]}"; do
-    port=${user[0]}
-    password=${user[1]}
-    end_comma=$(get_end_comma $i $size)
-    $1 $port $password 8 $end_comma
-    ((i++))
+  for((ui=0;ui<${#user_list[@]};ui++)); do
+    user=(${user_list[ui]})
+    end_comma=$(get_end_comma $ui $size)
+    $1 ${user[0]} ${user[1]} ${user[2]} $end_comma
   done
-    for user in "${user_list_2[@]}"; do
-      port=${user[0]}
-      password=${user[1]}
-      end_comma=$(get_end_comma $i $size)
-      $1 $port $password 9 $end_comma
-      ((i++))
-    done
-#  for((ui=0;ui<${#user_list[@]};ui++ )); do
-#    user=(${user_list[ui]})
-#    port=${user[0]}
-#    password=${user[1]}
-#    end_comma=$(get_end_comma $ui $size)
-#    $1 $port $password $end_comma
-#  done
 }

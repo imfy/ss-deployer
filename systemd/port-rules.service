@@ -1,0 +1,9 @@
+[Unit]
+Description=port-rules
+After=network.target nss-lookup.target
+
+[Service]
+ExecStart=bash /usr/bin/port-rules.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -4,8 +4,8 @@
       "services": ["HandlerService", "LoggerService", "StatsService"]
     },
     "log": {
-      "access": "/root/xray/log/access.log",
-      "error": "/root/xray/log/error.log",
+      "access": "/usr/ss-deployer/xray/log/access.log",
+      "error": "/usr/ss-deployer/xray/log/error.log",
       "loglevel": "error",
       "dnsLog": false
     },

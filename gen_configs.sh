@@ -16,11 +16,10 @@ if [[ $1 == "1" ]]; then
 fi
 
 ## 启动各项服务
-chmod +x mmp-go/mmp-go
-chmod +x xray/xray
-bash mserver.sh
-bash xserver.sh
-if [[ $1 == "f" ]]; then
-  chmod +x naive/naive
-  bash nserver;
-fi
+systemctl daemon-reload  # 重新载入服务
+systemctl enable mmp-go
+systemctl enable port-rules
+systemctl enable xray
+service mmp-go start
+service port-rules start
+service xray start
