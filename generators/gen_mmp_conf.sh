@@ -1,8 +1,6 @@
 #! /bin/bash
 
 SD_HOME=/usr/ss-deployer
-IP_FILE=$SD_HOME/ip
-MMP_PORTS_FILE=$SD_HOME/mmp_ports
 
 . $SD_HOME/generators/lib.sh
 . $SD_HOME/mmp_ports
@@ -17,7 +15,6 @@ wm() {
 
 # write single mmp server
 wsms() {
-  ip=$(cat $IP_FILE)
   comma=$(get_start_comma)
   if [[ $3 -eq $group_num ]]; then
     wm "        $comma{"

@@ -1,8 +1,9 @@
 #! /bin/bash
 
 SD_HOME=/usr/ss-deployer
+
+BASIC_CONF=$SD_HOME/basic_confs
 GENERATORS_DIR=$SD_HOME/generators
-IP_FILE=$SD_HOME/ip
 MMP_BIN=/usr/bin/mmp-go
 MMP_DIR=$SD_HOME/mmp-go
 MMP_PORTS_FILE=$SD_HOME/mmp_ports
@@ -12,6 +13,7 @@ XRAY_DIR=$SD_HOME/xray
 
 # 创建配置目录
 if [[ ! -d $SD_HOME ]]; then mkdir $SD_HOME; fi
+rm -rf $BASIC_CONF
 
 # 选择模式
 read -p "新装或更新配置？（新装1；更新配置2。不输入默认2）：" mode
@@ -20,12 +22,13 @@ if [[ $mode == "" ]]; then mode=2; fi
 # 配置ip
 read -p "本地ip（不输入则为127.0.0.1）：" ip
 if [[ $ip == "" ]]; then ip=127.0.0.1; fi
-echo $ip > $IP_FILE
+echo "ip=$ip" >> $BASIC_CONF
 
 # 配置mmp端口
-read -p "聚合端口编号（不输入则为1，即41998和41999）：" n
-if [[ $n == "" ]]; then n=1; fi
-echo "mmp_ports=(4${n}998 4${n}999)" > $MMP_PORTS_FILE
+read -p "聚合端口编号（不输入则为1，即41998和41999）：" rtype
+if [[ $rtype == "" ]]; then rtype=1; fi
+echo "mmp_ports=(4${rtype}998 4${rtype}999)" > $MMP_PORTS_FILE
+echo "rtype=$rtype" >> $BASIC_CONF
 
 # 配置ss端口
 if [[ -f user_confs ]]; then mv -f user_confs $SD_HOME/user_confs; fi
@@ -34,8 +37,9 @@ if [[ -f user_confs ]]; then mv -f user_confs $SD_HOME/user_confs; fi
 if [[ -f dest_confs ]]; then mv -f dest_confs $SD_HOME/dest_confs; fi
 
 # 配置设备类型
-read -p "当前设备类型（前置1；落地2。不输入默认2）：" type
-if [[ $type == "" ]]; then type=2; fi
+read -p "当前设备类型（前置1；落地2。不输入默认2）：" dtype
+if [[ $dtype == "" ]]; then dtype=2; fi
+echo "dtype=$dtype" >> $BASIC_CONF
 
 # 执行安装
 if [[ $mode == 1 ]]; then
@@ -61,6 +65,7 @@ if [[ $mode == 1 ]]; then
   # 移动xray
   if [[ -f $XRAY_BIN ]]; then rm -rf $XRAY_BIN; fi
   mv -f ss-deployer/xray/xray $XRAY_BIN
+  mv -f ss-deployer/xray/*.dat /usr/bin
   chmod +x $XRAY_BIN
   if [[ -d $XRAY_DIR ]]; then rm -rf $XRAY_DIR; fi
   mkdir $XRAY_DIR
@@ -86,7 +91,7 @@ if [[ $mode == 1 ]]; then
   rm -rf ss-deployer
 
   # 安装warp
-  if [[ $type == 2 ]]; then
+  if [[ $dtype == 2 ]]; then
     read -p "是否安装warp以提供ipv6解锁能力（安装1；不安装2。不输入默认2）：" warp
     if [[ $warp == "" ]]; then warp=2; fi
     if [[ $warp == 1 ]]; then
@@ -100,8 +105,4 @@ fi
 chmod +x *.sh
 
 # 生成配置文件
-if [[ $type == 1 ]]; then
-  ./gen_configs.sh 1
-else
-  ./gen_configs.sh 2
-fi
+./gen_configs.sh

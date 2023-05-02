@@ -8,7 +8,7 @@ bash $SD_HOME/generators/gen_mmp_conf.sh
 # 创建inbounds.json
 bash $SD_HOME/generators/gen_inbounds.sh
 
-if [[ $1 == "1" ]]; then
+if [[ $dtype -eq 1 ]]; then
   # 创建outbounds.json
   bash $SD_HOME/generators/gen_outbounds.sh
   # 创建routing.json

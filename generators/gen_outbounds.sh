@@ -9,6 +9,8 @@ outbounds_file=$SD_HOME/xray/confs/outbounds.json
 
 is_first=1
 
+ss_dest_list=("${ss_common_dest_list[@]}" "${ss_tcp_dest_list[@]}" "${ss_udp_dest_list[@]}")
+
 # write outbounds file
 wo() {
   w $outbounds_file "$1"
@@ -16,8 +18,9 @@ wo() {
 
 # write single outbound
 wso() {
+  comma=$(get_start_comma)
   is_first=0
-  wo "    $5{"
+  wo "    $comma{"
   wo "      \"tag\": \"obs-$1\","
   wo "      \"protocol\": \"shadowsocks\","
   wo "      \"settings\": {"
@@ -31,23 +34,49 @@ wso() {
   wo "    }"
 }
 
+# write single reality outbound
+wsro() {
+  comma=$(get_start_comma)
+  is_first=0
+  wo "    $comma{"
+  wo "      \"tag\": \"obs-$1\","
+  wo "      \"protocol\": \"vless\","
+  wo "      \"settings\": {"
+  wo "        \"vnext\": [{"
+  wo "          \"address\": \"$2\","
+  wo "          \"port\": 443,"
+  wo "          \"users\": [{"
+  wo "            \"id\": \"$3\","
+  wo "            \"flow\": \"xtls-rprx-vision\","
+  wo "            \"encryption\": \"none\""
+  wo "          }]"
+  wo "        }]"
+  wo "      },"
+  wo "      \"streamSettings\": {"
+  wo "        \"network\": \"tcp\","
+  wo "        \"security\": \"reality\","
+  wo "        \"realitySettings\": {"
+  wo "          \"show\": false,"
+  wo "          \"fingerprint\": \"chrome\","
+  wo "          \"serverName\": \"www.microsoft.com\","
+  wo "          \"publicKey\": \"$4\","
+  wo "          \"shortId\": \"c1\","
+  wo "          \"spiderX\": \"/\""
+  wo "        }"
+  wo "      }"
+  wo "    }"
+}
+
 rm -rf $outbounds_file
 wo "{"
 wo "  \"outbounds\": ["
-  for line in "${ss_common_dest_list[@]}"; do
+  for line in "${reality_dest_list[@]}"; do
     route=($line)
-    comma=$(get_start_comma)
-    wso ${route[0]} ${route[1]} ${route[2]} ${route[3]} $comma
+    wsro ${route[0]} ${route[1]} ${route[2]} ${route[3]}
   done
-  for line in "${ss_tcp_dest_list[@]}"; do
+  for line in "${ss_dest_list[@]}"; do
     route=($line)
-    comma=$(get_start_comma)
-    wso ${route[0]} ${route[1]} ${route[2]} ${route[3]} $comma
-  done
-  for line in "${ss_udp_dest_list[@]}"; do
-    route=($line)
-    comma=$(get_start_comma)
-    wso ${route[0]} ${route[1]} ${route[2]} ${route[3]} $comma
+    wso ${route[0]} ${route[1]} ${route[2]} ${route[3]}
   done
 wo "  ]"
 wo "}"
