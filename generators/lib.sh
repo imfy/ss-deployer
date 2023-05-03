@@ -4,6 +4,7 @@ SD_HOME=/usr/ss-deployer
 
 . $SD_HOME/basic_confs
 . $SD_HOME/dest_confs
+. $SD_HOME/mmp_ports
 . $SD_HOME/user_confs
 
 is_first=1
@@ -29,6 +30,12 @@ get_start_comma() {
   fi
 }
 
+for_mmp_ports() {
+  for port in "${mmp_ports[@]}"; do
+    $1 $port
+  done
+}
+
 # write
 w() {
   echo "$2" >> $1
@@ -38,6 +45,6 @@ for_users() {
   local size=${#user_list[@]}
   for((ui=0;ui<${#user_list[@]};ui++)); do
     user=(${user_list[ui]})
-    $1 ${user[0]} ${user[1]} ${user[2]}
+    $1 ${user[0]} ${user[1]} ${user[2]} ${user[3]}
   done
 }

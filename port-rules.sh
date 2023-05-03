@@ -4,7 +4,6 @@ SD_HOME=/usr/ss-deployer
 
 . $SD_HOME/generators/lib.sh
 
-user_list=("${user_list_1[@]}" "${user_list_2[@]}")
 banned_port_v4=()
 banned_port_v6=()
 
@@ -83,7 +82,6 @@ for port in ${banned_port_v6[@]}; do
 done
 for line in "${user_list[@]}"; do
   user=($line)
-  echo ${user[0]}
-#  set_rules iptables $port
-#  set_rules ip6tables $port 6
+  set_rules iptables ${user[0]}
+  set_rules ip6tables ${user[0]} 6
 done

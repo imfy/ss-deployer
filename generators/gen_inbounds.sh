@@ -13,24 +13,21 @@ wi() {
 
 # write single inbound
 wsi() {
-  comma=$(get_start_comma)
-  is_first=0
-  wi "    $comma{"
+  wi "    {"
   wi "      \"tag\": \"$1\","
   wi "      \"port\": $1,"
   wi "      \"protocol\": \"shadowsocks\","
   wi "      \"settings\": {"
   wi "        \"password\": \"$2\","
   wi "        \"method\": \"aes-128-gcm\","
-  wi "        \"netwirk\": \"tcp,udp\""
+  wi "        \"network\": \"tcp,udp\""
   wi "      }"
-  wi "    }"
+  wi "    },"
 }
 
 # write reality inbound
 wri() {
   rc=($reality)  # reality config
-  is_first=0
   wi "    {"
   wi "      \"tag\": \"443\","
   wi "      \"listen\": \"0.0.0.0\","
@@ -44,7 +41,7 @@ wri() {
   wi "        \"decryption\": \"none\""
   wi "      },"
   wi "      \"streamSettings\": {"
-  wi "        \"netwirk\": \"tcp\","
+  wi "        \"network\": \"tcp\","
   wi "        \"security\": \"reality\","
   wi "        \"realitySettings\": {"
   wi "          \"show\": false,"
@@ -57,15 +54,25 @@ wri() {
   wi "          \"shortIds\": [\"c1\"]"
   wi "        }"
   wi "      }"
-  wi "    }"
+  wi "    },"
 }
 
 rm -rf $inbounds_file
+echo "generate xray/inbounds.json"
 wi "{"
 wi "  \"inbounds\": ["
         if [[ $dtype -eq 2 ]]; then
           wri
         fi
         for_users wsi
+wi "    {"
+wi "      \"tag\": \"api\","
+wi "      \"listen\": \"$ip\","
+wi "      \"port\": 10085,"
+wi "      \"protocol\": \"dokodemo-door\","
+wi "      \"settings\": {"
+wi "        \"address\": \"$ip\""
+wi "      }"
+wi "    }"
 wi "  ]"
 wi "}"

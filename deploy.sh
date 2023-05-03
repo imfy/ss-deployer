@@ -56,14 +56,12 @@ if [[ $mode == 1 ]]; then
   rm -rf ss-deployer/README.md
 
   # 移动mmp-go
-  if [[ -f $MMP_BIN ]]; then rm -rf $MMP_BIN; fi
   mv -f ss-deployer/mmp-go/mmp-go $MMP_BIN
   chmod +x $MMP_BIN
   if [[ -d $MMP_DIR ]]; then rm -rf $MMP_DIR; fi
   mkdir $MMP_DIR
 
   # 移动xray
-  if [[ -f $XRAY_BIN ]]; then rm -rf $XRAY_BIN; fi
   mv -f ss-deployer/xray/xray $XRAY_BIN
   mv -f ss-deployer/xray/*.dat /usr/bin
   chmod +x $XRAY_BIN
@@ -78,7 +76,6 @@ if [[ $mode == 1 ]]; then
   mv -f ss-deployer/generators/* $GENERATORS_DIR
 
   # 移动port-rules
-  if [[ -f $PR_BIN ]]; then rm -rf $PR_BIN; fi
   mv -f ss-deployer/port-rules.sh $PR_BIN
   chmod +x $PR_BIN
 
@@ -95,8 +92,7 @@ if [[ $mode == 1 ]]; then
     read -p "是否安装warp以提供ipv6解锁能力（安装1；不安装2。不输入默认2）：" warp
     if [[ $warp == "" ]]; then warp=2; fi
     if [[ $warp == 1 ]]; then
-      apt install -y curl
-      wget -N https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
+      wget https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
       bash menu.sh
     fi
   fi

@@ -49,6 +49,7 @@ for_mmp_ports() {
 }
 
 rm -rf $mmp_config_file
+echo "generate mmp-go/conf.json"
 wm "{"
 wm "  \"groups\": ["
   for_mmp_ports wsmg

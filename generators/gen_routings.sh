@@ -51,28 +51,25 @@ wsb() {
 # write single rule
 wsr() {
   if [[ ${#tcp_dest_list[@]} -gt 0 ]]; then
-    local comma=$(get_start_comma)
-    wr "      $comma{"
+    wr "      {"
     wr "        \"inboundTag\": [\"$1\"],"
     wr "        \"balancerTag\": \"balancer-tcp\","
     wr "        \"network\": \"tcp\","
     wr "        \"type\": \"field\""
-    wr "      }"
-    is_first=0
+    wr "      },"
   fi
   if [[ ${#udp_dest_list[@]} -gt 0 ]]; then
-    local comma=$(get_start_comma)
-    wr "      $comma{"
+    wr "      {"
     wr "        \"inboundTag\": [\"$1\"],"
     wr "        \"balancerTag\": \"balancer-udp\","
     wr "        \"network\": \"udp\","
     wr "        \"type\": \"field\""
-    wr "      }"
-    is_first=0
+    wr "      },"
   fi
 }
 
 rm -rf $routing_file
+echo "generate xray/routings.json"
 wr "{"
 wr "  \"routing\": {"
 wr "    \"balancers\": ["
@@ -81,6 +78,11 @@ wr "    ],"
 is_first=1
 wr "    \"rules\": ["
           for_users wsr
+wr "      {"
+wr "        \"inboundTag\": [\"api\"],"
+wr "        \"outboundTag\": \"api\","
+wr "        \"type\": \"field\""
+wr "      }"
 wr "    ]"
 wr "  }"
 wr "}"

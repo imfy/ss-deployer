@@ -68,6 +68,7 @@ wsro() {
 }
 
 rm -rf $outbounds_file
+echo "generate xray/outbounds.json"
 wo "{"
 wo "  \"outbounds\": ["
   for line in "${reality_dest_list[@]}"; do
