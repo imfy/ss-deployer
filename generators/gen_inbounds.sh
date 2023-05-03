@@ -6,9 +6,31 @@ SD_HOME=/usr/ss-deployer
 
 inbounds_file=$SD_HOME/xray/confs/inbounds.json
 
+is_first_client=1
+group_num=0
+
+get_client_start_comma() {
+  if [[ $is_first_client -eq 0 ]]; then
+    echo ","
+  fi
+}
+
 # write inbounds file
 wi() {
   w $inbounds_file "$1"
+}
+
+# write single client
+wsc() {
+  if [[ $group_num -eq $3 ]]; then
+    local comma=$(get_client_start_comma)
+    wi "          $comma{"
+    wi "            \"password\": \"$2\","
+    wi "            \"method\": \"aes-128-gcm\","
+    wi "            \"email\": \"$4@mail.com\""
+    wi "          }"
+    is_first_client=0
+  fi
 }
 
 # write single inbound
@@ -20,6 +42,24 @@ wsi() {
   wi "      \"settings\": {"
   wi "        \"password\": \"$2\","
   wi "        \"method\": \"aes-128-gcm\","
+  wi "        \"email\": \"$4@mail.com\","
+  wi "        \"network\": \"tcp,udp\""
+  wi "      }"
+  wi "    },"
+}
+
+# write single mmp inbound
+wsmi() {
+  is_first_client=1
+  ((++group_num))
+  wi "    {"
+  wi "      \"tag\": \"$1\","
+  wi "      \"port\": $1,"
+  wi "      \"protocol\": \"shadowsocks\","
+  wi "      \"settings\": {"
+  wi "        \"clients\": ["
+                for_users wsc
+  wi "        ],"
   wi "        \"network\": \"tcp,udp\""
   wi "      }"
   wi "    },"
@@ -64,6 +104,7 @@ wi "  \"inbounds\": ["
         if [[ $dtype -eq 2 ]]; then
           wri
         fi
+        for_mmp_ports wsmi
         for_users wsi
 wi "    {"
 wi "      \"tag\": \"api\","

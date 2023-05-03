@@ -77,6 +77,7 @@ wr "    \"balancers\": ["
 wr "    ],"
 is_first=1
 wr "    \"rules\": ["
+          for_mmp_ports wsr
           for_users wsr
 wr "      {"
 wr "        \"inboundTag\": [\"api\"],"

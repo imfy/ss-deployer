@@ -4,8 +4,6 @@ SD_HOME=/usr/ss-deployer
 
 BASIC_CONF=$SD_HOME/basic_confs
 GENERATORS_DIR=$SD_HOME/generators
-MMP_BIN=/usr/bin/mmp-go
-MMP_DIR=$SD_HOME/mmp-go
 MMP_PORTS_FILE=$SD_HOME/mmp_ports
 PR_BIN=/usr/bin/port-rules.sh
 XRAY_BIN=/usr/bin/xray
@@ -54,12 +52,6 @@ if [[ $mode == 1 ]]; then
   rm -rf ss-deployer/.git
   rm -rf ss-deployer/deploy.sh
   rm -rf ss-deployer/README.md
-
-  # 移动mmp-go
-  mv -f ss-deployer/mmp-go/mmp-go $MMP_BIN
-  chmod +x $MMP_BIN
-  if [[ -d $MMP_DIR ]]; then rm -rf $MMP_DIR; fi
-  mkdir $MMP_DIR
 
   # 移动xray
   mv -f ss-deployer/xray/xray $XRAY_BIN
