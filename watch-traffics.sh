@@ -1,0 +1,1 @@
+watch bash /usr/ss-deployer/traffics.sh

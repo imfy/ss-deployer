@@ -5,8 +5,7 @@ SD_HOME=/usr/ss-deployer
 . $SD_HOME/generators/lib.sh
 
 get_cost() {
-  echo $1:
-  xray api statsquery --server=$ip:10085 -pattern "$1@mail.com" \
+  xray api statsquery --server=$ip:10085 -pattern "$1@mail.com>>>traffic>>>$2" \
   | awk '{
       if (match($1, /"name":/)) {
           f = 1; gsub(/^"|link"|,$/, "", $2);
@@ -33,7 +32,9 @@ get_cost() {
 watch_traffics() {
   for line in "${user_list[@]}"; do
     user=($line)
-    get_cost ${user[3]}
+    echo ${user[3]}:
+    get_cost ${user[3]} "uplink"
+    get_cost ${user[3]} "downlink"
   done
 }
 

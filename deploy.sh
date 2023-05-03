@@ -74,6 +74,9 @@ if [[ $mode == 1 ]]; then
   # 移动system
   mv -f ss-deployer/systemd/* /lib/systemd/system
 
+  # 移动traffics
+  mv -f ss-deployer/traffics.sh $SD_HOME/traffics.sh
+
   # 剩余文件迁到root文件夹下
   mv -f ss-deployer/gen_configs.sh /root/gen_configs.sh
   mv -f ss-deployer/watch-traffics.sh /root/watch-traffics.sh
@@ -85,7 +88,8 @@ if [[ $mode == 1 ]]; then
     if [[ $warp == "" ]]; then warp=2; fi
     if [[ $warp == 1 ]]; then
       wget https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
-      bash menu.sh
+      wget https://raw.githubusercontent.com/fscarmen/warp/main/warp-go.sh && bash warp-go.sh
+      wget https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
     fi
   fi
 fi
