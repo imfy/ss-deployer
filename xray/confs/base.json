@@ -9,11 +9,6 @@
       "loglevel": "error",
       "dnsLog": false
     },
-    "observatory": {
-      "subjectSelector": [
-        "obs"
-      ]
-    },
     "policy": {
       "levels": {
         "0": {

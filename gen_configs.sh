@@ -8,6 +8,8 @@ SD_HOME=/usr/ss-deployer
 bash $SD_HOME/generators/gen_inbounds.sh
 
 if [[ $dtype -eq 1 ]]; then
+  # 创建base.json
+  bash $SD_HOME/generators/gen_base.sh
   # 创建outbounds.json
   bash $SD_HOME/generators/gen_outbounds.sh
   # 创建routing.json
