@@ -83,15 +83,15 @@ if [[ $mode == 1 ]]; then
   rm -rf ss-deployer
 
   # 安装warp
-  if [[ $dtype == 2 ]]; then
-    read -p "是否安装warp以提供ipv6解锁能力（安装1；不安装2。不输入默认2）：" warp
-    if [[ $warp == "" ]]; then warp=2; fi
-    if [[ $warp == 1 ]]; then
-      wget https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
-      wget https://raw.githubusercontent.com/fscarmen/warp/main/warp-go.sh && bash warp-go.sh
-      wget https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
-    fi
-  fi
+#  if [[ $dtype == 2 ]]; then
+#    read -p "是否安装warp以提供ipv6解锁能力（安装1；不安装2。不输入默认2）：" warp
+#    if [[ $warp == "" ]]; then warp=2; fi
+#    if [[ $warp == 1 ]]; then
+#      wget https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
+#      wget https://raw.githubusercontent.com/fscarmen/warp/main/warp-go.sh && bash warp-go.sh
+#      wget https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh
+#    fi
+#  fi
 fi
 
 chmod +x *.sh

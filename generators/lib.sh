@@ -3,20 +3,22 @@
 SD_HOME=/usr/ss-deployer
 
 . $SD_HOME/basic_confs
-. $SD_HOME/dest_confs
+if [[ -f "$SD_HOME/dest_confs" ]]; then
+  . $SD_HOME/dest_confs
+  get_reality_dest_list="reality_dest_list=(\"\${reality_dest_list_${rtype}[@]}\")"
+  eval $get_reality_dest_list
+  get_ss_common_dest_list="ss_common_dest_list=(\"\${ss_common_dest_list_${rtype}[@]}\")"
+  eval $get_ss_common_dest_list
+  get_ss_tcp_dest_list="ss_tcp_dest_list=(\"\${ss_tcp_dest_list_${rtype}[@]}\")"
+  eval $get_ss_tcp_dest_list
+  get_ss_udp_dest_list="ss_udp_dest_list=(\"\${ss_udp_dest_list_${rtype}[@]}\")"
+  eval $get_ss_udp_dest_list
+fi
 . $SD_HOME/mmp_ports
 . $SD_HOME/user_confs
 
 is_first=1
 
-get_reality_dest_list="reality_dest_list=(\"\${reality_dest_list_${rtype}[@]}\")"
-eval $get_reality_dest_list
-get_ss_common_dest_list="ss_common_dest_list=(\"\${ss_common_dest_list_${rtype}[@]}\")"
-eval $get_ss_common_dest_list
-get_ss_tcp_dest_list="ss_tcp_dest_list=(\"\${ss_tcp_dest_list_${rtype}[@]}\")"
-eval $get_ss_tcp_dest_list
-get_ss_udp_dest_list="ss_udp_dest_list=(\"\${ss_udp_dest_list_${rtype}[@]}\")"
-eval $get_ss_udp_dest_list
 
 get_end_comma() {
   if [[ $1 -lt $(($2-1)) ]]; then
