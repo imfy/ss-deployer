@@ -6,6 +6,11 @@ SD_HOME=/usr/ss-deployer
 
 inbounds_file=$SD_HOME/xray/confs/inbounds.json
 
+use_xui=0
+if [[ -f "/etc/x-ui/x-ui.db" ]]; then
+  use_xui=1
+fi
+
 is_first_client=1
 group_num=0
 
@@ -86,12 +91,12 @@ wri() {
     wi "        \"security\": \"reality\","
     wi "        \"realitySettings\": {"
     wi "          \"show\": false,"
-    wi "          \"dest\": \"microsoft.com:443\","
+    wi "          \"dest\": \"${rc[1]}:443\","
     wi "          \"serverNames\": ["
-    wi "            \"microsoft.com\","
-    wi "            \"www.microsoft.com\""
+    wi "            \"apple.com\","
+    wi "            \"www.apple.com\""
     wi "          ],"
-    wi "          \"privateKey\": \"${rc[1]}\","
+    wi "          \"privateKey\": \"${rc[2]}\","
     wi "          \"shortIds\": [\"c1\"]"
     wi "        }"
     wi "      }"
@@ -107,7 +112,9 @@ wi "  \"inbounds\": ["
           wri
         fi
         for_mmp_ports wsmi
-        for_users wsi
+        if [[ $use_xui -eq 0 ]]; then
+          for_users wsi
+        fi
 wi "    {"
 wi "      \"tag\": \"api\","
 wi "      \"listen\": \"$ip\","

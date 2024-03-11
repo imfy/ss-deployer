@@ -46,7 +46,7 @@ wsro() {
   wo "          \"address\": \"$2\","
   wo "          \"port\": 443,"
   wo "          \"users\": [{"
-  wo "            \"id\": \"$3\","
+  wo "            \"id\": \"$4\","
   wo "            \"flow\": \"xtls-rprx-vision\","
   wo "            \"encryption\": \"none\""
   wo "          }]"
@@ -58,8 +58,8 @@ wsro() {
   wo "        \"realitySettings\": {"
   wo "          \"show\": false,"
   wo "          \"fingerprint\": \"chrome\","
-  wo "          \"serverName\": \"www.microsoft.com\","
-  wo "          \"publicKey\": \"$4\","
+  wo "          \"serverName\": \"$3\","
+  wo "          \"publicKey\": \"$5\","
   wo "          \"shortId\": \"c1\","
   wo "          \"spiderX\": \"/\""
   wo "        }"
@@ -73,7 +73,7 @@ wo "{"
 wo "  \"outbounds\": ["
   for line in "${reality_dest_list[@]}"; do
     route=($line)
-    wsro ${route[0]} ${route[1]} ${route[2]} ${route[3]}
+    wsro ${route[0]} ${route[1]} ${route[2]} ${route[3]} ${route[4]}
   done
   for line in "${ss_dest_list[@]}"; do
     route=($line)
